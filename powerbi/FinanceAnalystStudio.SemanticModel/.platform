@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Finance Analyst Studio"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "0d15587d-a87a-488e-b405-9b987296e48e"
+  }
+}

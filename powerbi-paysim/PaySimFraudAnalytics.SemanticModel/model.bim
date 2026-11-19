@@ -1,0 +1,471 @@
+{
+  "compatibilityLevel": 1606,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"Activity\",\"SimulationHours\",\"TransactionTypes\",\"FraudDetails\",\"AccountProfiles\"]"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": false
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "relationships": [
+      {
+        "name": "Activity_SimulationHours",
+        "fromColumn": "step",
+        "fromTable": "Activity",
+        "toColumn": "step",
+        "toTable": "SimulationHours"
+      },
+      {
+        "name": "Activity_TransactionTypes",
+        "fromColumn": "transaction_type",
+        "fromTable": "Activity",
+        "toColumn": "transaction_type",
+        "toTable": "TransactionTypes"
+      },
+      {
+        "name": "FraudDetails_SimulationHours",
+        "fromColumn": "step",
+        "fromTable": "FraudDetails",
+        "toColumn": "step",
+        "toTable": "SimulationHours"
+      },
+      {
+        "name": "FraudDetails_TransactionTypes",
+        "fromColumn": "transaction_type",
+        "fromTable": "FraudDetails",
+        "toColumn": "transaction_type",
+        "toTable": "TransactionTypes"
+      }
+    ],
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "Activity",
+        "columns": [
+          {
+            "name": "step",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "8e7daf30-2d68-4c3c-b22e-af598a6f61aa",
+            "sourceColumn": "step",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "transaction_type",
+            "dataType": "string",
+            "lineageTag": "e84e9897-5b10-4a1b-8087-0708ffaf89b6",
+            "sourceColumn": "transaction_type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "is_fraud",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "b20ed6e4-210d-4b61-a8f8-8007e7e82d7d",
+            "sourceColumn": "is_fraud",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "is_flagged",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "6f74d2de-bca2-434b-919a-e8cc95e9fe09",
+            "sourceColumn": "is_flagged",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "transaction_count",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "691d4ae8-485b-48e5-9b51-7f61c8bd466b",
+            "sourceColumn": "transaction_count",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "total_amount",
+            "dataType": "decimal",
+            "formatString": "#,0.00",
+            "lineageTag": "81626940-6f77-4ce4-ba8b-6b0aca228fb6",
+            "sourceColumn": "total_amount",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "50d3ffb5-4136-40da-9bb5-e3a14b7c64aa",
+        "measures": [
+          {
+            "name": "Transactions",
+            "expression": "COALESCE(SUM(Activity[transaction_count]), 0)",
+            "formatString": "#,0",
+            "lineageTag": "8b9965f0-6cae-41b9-b63f-9697db85b5da"
+          },
+          {
+            "name": "Transaction Amount",
+            "expression": "COALESCE(SUM(Activity[total_amount]), 0)",
+            "formatString": "#,0.00",
+            "lineageTag": "fe00f6fd-8804-426e-a454-08928ad97f5b"
+          },
+          {
+            "name": "Fraud Transactions",
+            "expression": "CALCULATE([Transactions], KEEPFILTERS(Activity[is_fraud] = 1))",
+            "formatString": "#,0",
+            "lineageTag": "769a3cfb-bff3-442f-900e-ffe5e4fad8a6"
+          },
+          {
+            "name": "Fraud Amount",
+            "expression": "CALCULATE([Transaction Amount], KEEPFILTERS(Activity[is_fraud] = 1))",
+            "formatString": "#,0.00",
+            "lineageTag": "295e4d70-2f0c-44bf-ada9-8ead2d3d6d9b"
+          },
+          {
+            "name": "Fraud Rate",
+            "expression": "DIVIDE([Fraud Transactions], [Transactions])",
+            "formatString": "0.0000%",
+            "lineageTag": "d8f62bc2-46c7-4c55-bb59-26f9dd2f2ebf"
+          },
+          {
+            "name": "Flagged Transactions",
+            "expression": "CALCULATE([Transactions], KEEPFILTERS(Activity[is_flagged] = 1))",
+            "formatString": "#,0",
+            "lineageTag": "9c16e055-3207-4387-99be-d1f3472d03eb"
+          },
+          {
+            "name": "True Positives",
+            "expression": "CALCULATE([Transactions], KEEPFILTERS(Activity[is_fraud] = 1), KEEPFILTERS(Activity[is_flagged] = 1))",
+            "formatString": "#,0",
+            "lineageTag": "26347789-ad8b-4a2c-aa52-532625eece0f"
+          },
+          {
+            "name": "False Positives",
+            "expression": "CALCULATE([Transactions], KEEPFILTERS(Activity[is_fraud] = 0), KEEPFILTERS(Activity[is_flagged] = 1))",
+            "formatString": "#,0",
+            "lineageTag": "9c5aaa69-81bd-4477-94e5-eb11908570ca"
+          },
+          {
+            "name": "False Negatives",
+            "expression": "CALCULATE([Transactions], KEEPFILTERS(Activity[is_fraud] = 1), KEEPFILTERS(Activity[is_flagged] = 0))",
+            "formatString": "#,0",
+            "lineageTag": "084833c4-addc-4359-90f2-5e8380641a58"
+          },
+          {
+            "name": "True Negatives",
+            "expression": "CALCULATE([Transactions], KEEPFILTERS(Activity[is_fraud] = 0), KEEPFILTERS(Activity[is_flagged] = 0))",
+            "formatString": "#,0",
+            "lineageTag": "3d11e328-2c3a-444c-8024-f7a9c8013f7a"
+          },
+          {
+            "name": "Flag Precision",
+            "expression": "DIVIDE([True Positives], [Flagged Transactions])",
+            "formatString": "0.00%",
+            "lineageTag": "9d91c65d-d1d5-461d-800a-054976f2e3af"
+          },
+          {
+            "name": "Flag Recall",
+            "expression": "DIVIDE([True Positives], [Fraud Transactions])",
+            "formatString": "0.0000%",
+            "lineageTag": "475d818b-43a4-4cc4-9654-084cf5aaee36"
+          },
+          {
+            "name": "Originators (snapshot)",
+            "expression": "6353307",
+            "formatString": "#,0",
+            "lineageTag": "28af17ed-2b40-46b2-aa5d-7dd0dd1b54e0"
+          },
+          {
+            "name": "Recipients (snapshot)",
+            "expression": "2722362",
+            "formatString": "#,0",
+            "lineageTag": "97864252-23da-4baf-840b-965903b2576c"
+          },
+          {
+            "name": "Profiled Accounts",
+            "expression": "COUNTROWS(AccountProfiles)",
+            "formatString": "#,0",
+            "lineageTag": "c3eeae4f-e87b-4dd6-a223-01ae0b5ac9e2"
+          },
+          {
+            "name": "Profiled Transactions",
+            "expression": "SUM(AccountProfiles[transaction_count])",
+            "formatString": "#,0",
+            "lineageTag": "9a3e3921-fe81-403a-b466-82b29c1bd4ef"
+          },
+          {
+            "name": "Report Heading",
+            "expression": "\"PAYSIM | TRANSACTION & FRAUD ANALYTICS\"",
+            "lineageTag": "34ee8075-aae2-4f34-9ba1-6cd3ff1b973f"
+          },
+          {
+            "name": "Report Note",
+            "expression": "\"SYNTHETIC | Simulation hours, not dates | Unspecified local currency | Fraud amount is not realized loss\"",
+            "lineageTag": "e394ccc6-7661-4fe5-be8c-b678cdcd365c"
+          },
+          {
+            "name": "Account Note",
+            "expression": "\"TOP 1,000 ORIGINATORS by count, then amount, then ID | Whole snapshot; no time/type slicers\"",
+            "lineageTag": "3da0fe94-d954-4a11-bc18-077073a1e1e6"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Activity",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Parquet.Document(File.Contents(\"C:\\Users\\v-nisranjan\\Downloads\\New folder (2)\\data\\paysim\\activity_summary.parquet\")),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"step\", Int64.Type}, {\"transaction_type\", type text}, {\"is_fraud\", Int64.Type}, {\"is_flagged\", Int64.Type}, {\"transaction_count\", Int64.Type}, {\"total_amount\", Currency.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "SimulationHours",
+        "columns": [
+          {
+            "name": "step",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "99ea56ca-58fb-4f44-bb30-9394eb380393",
+            "sourceColumn": "step",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "simulation_day",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "7a48e03b-bb34-4392-a710-c381c1d35e01",
+            "sourceColumn": "simulation_day",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "hour_in_day",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "53673b52-fca0-42af-b63a-bfea0f165d14",
+            "sourceColumn": "hour_in_day",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "b0b41c7e-d126-40a7-a87e-43291bdd4213",
+        "partitions": [
+          {
+            "name": "SimulationHours",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Parquet.Document(File.Contents(\"C:\\Users\\v-nisranjan\\Downloads\\New folder (2)\\data\\paysim\\simulation_hours.parquet\")),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"step\", Int64.Type}, {\"simulation_day\", Int64.Type}, {\"hour_in_day\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "TransactionTypes",
+        "columns": [
+          {
+            "name": "transaction_type",
+            "dataType": "string",
+            "lineageTag": "1c6c2913-9d4f-4c3f-a9f4-4744c287a581",
+            "sourceColumn": "transaction_type",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "6f28310f-edfe-45d5-a250-f5cc45fa6225",
+        "partitions": [
+          {
+            "name": "TransactionTypes",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Parquet.Document(File.Contents(\"C:\\Users\\v-nisranjan\\Downloads\\New folder (2)\\data\\paysim\\transaction_types.parquet\")),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"transaction_type\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "FraudDetails",
+        "columns": [
+          {
+            "name": "source_row_id",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "28542789-5fa3-42f0-a088-4f1e4bc60625",
+            "sourceColumn": "source_row_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "step",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "7cc6c049-dfa5-4717-8a36-5e00738273fd",
+            "sourceColumn": "step",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "transaction_type",
+            "dataType": "string",
+            "lineageTag": "97ebb401-295b-410d-9d36-8e6d23a88498",
+            "sourceColumn": "transaction_type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "amount",
+            "dataType": "decimal",
+            "formatString": "#,0.00",
+            "lineageTag": "e407869b-5a85-4447-8f3b-ff39a5d6d5ac",
+            "sourceColumn": "amount",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "originator_id",
+            "dataType": "string",
+            "lineageTag": "13005c08-3cb3-4128-b9d6-cf5b799a6fb2",
+            "sourceColumn": "originator_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "recipient_id",
+            "dataType": "string",
+            "lineageTag": "e3c97506-281c-4b2c-9c64-dca3d072219a",
+            "sourceColumn": "recipient_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "is_flagged",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "297521ed-18f5-490a-abf5-ac16561ca9e4",
+            "sourceColumn": "is_flagged",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "70acc43b-ec54-4685-9195-bca51c327002",
+        "partitions": [
+          {
+            "name": "FraudDetails",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Parquet.Document(File.Contents(\"C:\\Users\\v-nisranjan\\Downloads\\New folder (2)\\data\\paysim\\fraud_details.parquet\")),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"source_row_id\", Int64.Type}, {\"step\", Int64.Type}, {\"transaction_type\", type text}, {\"amount\", Currency.Type}, {\"originator_id\", type text}, {\"recipient_id\", type text}, {\"is_flagged\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "AccountProfiles",
+        "columns": [
+          {
+            "name": "profile_rank",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "247b347f-549c-4bb3-b565-44ae6d271ea9",
+            "sourceColumn": "profile_rank",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "originator_id",
+            "dataType": "string",
+            "lineageTag": "370b514f-7a74-4d37-a2e3-1bb997cb61aa",
+            "sourceColumn": "originator_id",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "transaction_count",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "a1fbb00c-bc14-4b93-93e5-a5726f819a16",
+            "sourceColumn": "transaction_count",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "total_amount",
+            "dataType": "decimal",
+            "formatString": "#,0.00",
+            "lineageTag": "cd214f4a-bc36-4ef4-8d31-23f00db03e69",
+            "sourceColumn": "total_amount",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "fraud_count",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "8b7aee71-938f-4cfb-bcb7-ff510f525369",
+            "sourceColumn": "fraud_count",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "fraud_amount",
+            "dataType": "decimal",
+            "formatString": "#,0.00",
+            "lineageTag": "b097c835-b748-4926-8f63-661cf563876d",
+            "sourceColumn": "fraud_amount",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "first_step",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "14a94a00-4922-474e-9c60-b4f960950792",
+            "sourceColumn": "first_step",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "last_step",
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "71d0fb86-881f-474f-a88f-2e1729095c6c",
+            "sourceColumn": "last_step",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "11f07df6-79d3-4b3f-8096-52168d728eec",
+        "partitions": [
+          {
+            "name": "AccountProfiles",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Parquet.Document(File.Contents(\"C:\\Users\\v-nisranjan\\Downloads\\New folder (2)\\data\\paysim\\account_profiles.parquet\")),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"profile_rank\", Int64.Type}, {\"originator_id\", type text}, {\"transaction_count\", Int64.Type}, {\"total_amount\", Currency.Type}, {\"fraud_count\", Int64.Type}, {\"fraud_amount\", Currency.Type}, {\"first_step\", Int64.Type}, {\"last_step\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.15.0/schema.json",
+  "name": "profiles",
+  "position": {
+    "x": 24,
+    "y": 224,
+    "height": 425,
+    "width": 1232,
+    "tabOrder": 248
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "profile_rank"
+                }
+              },
+              "queryRef": "AccountProfiles.profile_rank"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "originator_id"
+                }
+              },
+              "queryRef": "AccountProfiles.originator_id"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "transaction_count"
+                }
+              },
+              "queryRef": "AccountProfiles.transaction_count"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "total_amount"
+                }
+              },
+              "queryRef": "AccountProfiles.total_amount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "fraud_count"
+                }
+              },
+              "queryRef": "AccountProfiles.fraud_count"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "fraud_amount"
+                }
+              },
+              "queryRef": "AccountProfiles.fraud_amount"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "first_step"
+                }
+              },
+              "queryRef": "AccountProfiles.first_step"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "AccountProfiles"
+                    }
+                  },
+                  "Property": "last_step"
+                }
+              },
+              "queryRef": "AccountProfiles.last_step"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "AccountProfiles"
+                  }
+                },
+                "Property": "profile_rank"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top 1,000 originators by count, then amount, then ID - full snapshot'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#243746'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

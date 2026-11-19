@@ -1,0 +1,51 @@
+{
+  "name": "finance_lakehouse_snapshot",
+  "properties": {
+    "description": "Run the deployed Databricks job after the complete transaction snapshot is uploaded.",
+    "parameters": {
+      "job_id": {"type": "String"},
+      "input_path": {"type": "String"},
+      "catalog": {"type": "String"},
+      "schema": {"type": "String", "defaultValue": "finance_portfolio"}
+    },
+    "concurrency": 1,
+    "activities": [
+      {
+        "name": "RunFinanceLakehouse",
+        "type": "DatabricksJob",
+        "dependsOn": [],
+        "policy": {
+          "timeout": "0.01:00:00",
+          "retry": 0,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "linkedServiceName": {
+          "referenceName": "AzureDatabricks",
+          "type": "LinkedServiceReference"
+        },
+        "typeProperties": {
+          "jobID": {
+            "value": "@pipeline().parameters.job_id",
+            "type": "Expression"
+          },
+          "jobParameters": {
+            "input_path": {
+              "value": "@pipeline().parameters.input_path",
+              "type": "Expression"
+            },
+            "catalog": {
+              "value": "@pipeline().parameters.catalog",
+              "type": "Expression"
+            },
+            "schema": {
+              "value": "@pipeline().parameters.schema",
+              "type": "Expression"
+            }
+          }
+        }
+      }
+    ],
+    "annotations": ["portfolio", "synthetic-data-only"]
+  }
+}

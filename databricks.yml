@@ -1,0 +1,48 @@
+bundle:
+  name: finance-lakehouse
+
+variables:
+  catalog:
+    description: Existing Unity Catalog catalog with managed storage configured
+  schema:
+    description: Dedicated schema owned by this portfolio project
+    default: finance_portfolio
+  input_path:
+    description: CSV file in a Unity Catalog external volume backed by ADLS
+  cluster_id:
+    description: Existing Unity Catalog enabled Databricks Runtime 15.4 LTS or newer cluster
+
+sync:
+  include:
+    - finance_lakehouse/**
+    - notebooks/**
+  exclude:
+    - "**/__pycache__/**"
+
+resources:
+  jobs:
+    finance_lakehouse:
+      name: finance-lakehouse-${bundle.target}
+      max_concurrent_runs: 1
+      timeout_seconds: 3600
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}
+        - name: input_path
+          default: ${var.input_path}
+      tasks:
+        - task_key: transform_transactions
+          existing_cluster_id: ${var.cluster_id}
+          notebook_task:
+            notebook_path: ./notebooks/run_lakehouse.py
+            base_parameters:
+              catalog: "{{job.parameters.catalog}}"
+              schema: "{{job.parameters.schema}}"
+              input_path: "{{job.parameters.input_path}}"
+
+targets:
+  dev:
+    default: true
+    mode: development
